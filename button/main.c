@@ -13,12 +13,15 @@ void btn_handler(void *arg)
   // Прием аргументов, передаваемых из главного потока.
   (void)arg;
 
-  //timestamp = xtimer_now();
-  //xtimer_periodic_wakeup(&timestamp, INTERVAL);
 
+  xtimer_usleep(INTERVAL);
     // Переключение состояния пина PC8
     gpio_toggle(GPIO_PIN(PORT_C, 8));
     gpio_toggle(GPIO_PIN(PORT_C, 9));
+
+  //timestamp = xtimer_now();
+  //xtimer_periodic_wakeup(&timestamp, INTERVAL);
+  xtimer_usleep(INTERVAL);
 
 }
 
