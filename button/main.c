@@ -3,25 +3,26 @@
 #include "timex.h"
 #include "periph/gpio.h"
 
-#define INTERVAL (1U * MS_PER_SEC * 100)
+#define INTERVAL (1U * MS_PER_SEC * 10000)
 
-xtimer_ticks32_t timestamp;
+
+
 
 // Обработчик прерывания по нажатию кнопки
 void btn_handler(void *arg)
 {
+	static bool iswait;
   // Прием аргументов, передаваемых из главного потока.
   (void)arg;
 
+	if (!iswait) {
+		iswait = true;
+		// Переключение состояния пина PC8
+		gpio_toggle(GPIO_PIN(PORT_C, 8));
 
-  xtimer_usleep(INTERVAL);
-    // Переключение состояния пина PC8
-    gpio_toggle(GPIO_PIN(PORT_C, 8));
-    gpio_toggle(GPIO_PIN(PORT_C, 9));
-
-  //timestamp = xtimer_now();
-  //xtimer_periodic_wakeup(&timestamp, INTERVAL);
-  xtimer_usleep(INTERVAL);
+		xtimer_usleep(INTERVAL);
+		iswait = false;
+	}
 
 }
 
@@ -35,7 +36,6 @@ int main(void)
   gpio_init_int(GPIO_PIN(PORT_A, 0), GPIO_IN, GPIO_RISING, btn_handler, NULL);
   // Инициализация пина PC8 на выход
 	gpio_init(GPIO_PIN(PORT_C, 8), GPIO_OUT);
-	gpio_init(GPIO_PIN(PORT_C, 9), GPIO_OUT);
 
   while(1){}
   return 0;
