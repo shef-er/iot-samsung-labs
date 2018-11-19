@@ -15,11 +15,22 @@ void btn_handler(void *arg)
   // Прием аргументов, передаваемых из главного потока.
   (void)arg;
   
-
+		int state = gpio_read(GPIO_PIN(PORT_A, 0));
+		
+		if (state) {
+			// Переключение состояния пина PC8
+			
+			if (!iswait) {
+				iswait = true;
+				gpio_toggle(GPIO_PIN(PORT_C, 8));
+				xtimer_usleep(INTERVAL);
+				iswait = false;
+			}
+		}
+	/*
 	if (!iswait) {
 		iswait = true;
   
-		int state = gpio_read(GPIO_PIN(PORT_A, 0));
 		
 		if (state) {
 			// Переключение состояния пина PC8
@@ -32,6 +43,7 @@ void btn_handler(void *arg)
 		xtimer_usleep(INTERVAL);
 		iswait = false;
 	}
+	*/
 
 }
 
